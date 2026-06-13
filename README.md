@@ -1,4 +1,4 @@
-# TechGigsZambo-Page
+# TechGigs-Web
 
 TechGigs Zambo landing page built with React and Vite.
 
