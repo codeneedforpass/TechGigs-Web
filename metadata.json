@@ -1,0 +1,6 @@
+{
+  "name": "Techgigs Zambo",
+  "description": "A clean, modern portfolio and services showcase landing page for Techgigs Zambo, a student-run tech and creative services page.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
