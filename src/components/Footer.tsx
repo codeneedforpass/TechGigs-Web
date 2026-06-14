@@ -1,4 +1,5 @@
-import { Rocket, Facebook, Mail } from 'lucide-react';
+import { Facebook, Mail } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -26,17 +27,10 @@ export default function Footer() {
           
           {/* Brand block */}
           <div className="flex items-center gap-3 text-left">
-            <div className="p-2 rounded-lg bg-[#22d3ee]/10 border border-[#22d3ee]/20">
-              <Rocket className="h-4.5 w-4.5 text-[#22d3ee]" />
-            </div>
-            <div>
-              <span className="font-bold text-base tracking-tight text-white block">
-                Techgigs Zambo
-              </span>
-              <span className="text-[10px] text-white/40 font-mono tracking-widest uppercase block">
-                Student-Run Services
-              </span>
-            </div>
+            <Logo size="md" />
+            <span className="font-bold text-base tracking-tight text-white">
+              Techgigs Zambo
+            </span>
           </div>
 
           {/* Quick links block */}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Rocket } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -53,17 +54,10 @@ export default function Navbar() {
           onClick={() => scrollToSection('home')}
           className="flex items-center gap-2.5 group text-left cursor-pointer"
         >
-          <div className="w-6 h-6 bg-[#22d3ee] rounded-[4px] flex items-center justify-center shrink-0 shadow-sm shadow-[#22d3ee]/20">
-            <Rocket className="h-3.5 w-3.5 text-[#050505]" />
-          </div>
-          <div>
-            <span className="font-extrabold text-base tracking-[-0.5px] text-white">
-              TECHGIGS ZAMBO
-            </span>
-            <span className="block text-[8px] text-white/50 font-mono tracking-[1.5px] uppercase">
-              Student-Run Tech Collective
-            </span>
-          </div>
+          <Logo size="sm" />
+          <span className="font-extrabold text-base tracking-[-0.5px] text-white">
+            TECHGIGS ZAMBO
+          </span>
         </button>
 
         {/* Desktop Navigation */}
