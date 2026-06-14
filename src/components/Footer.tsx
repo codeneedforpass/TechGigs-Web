@@ -1,4 +1,4 @@
-import { Rocket, Facebook, Mail, LayoutGrid } from 'lucide-react';
+import { Rocket, Facebook, Mail } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -76,7 +76,7 @@ export default function Footer() {
           {/* Icon buttons */}
           <div className="flex items-center gap-3">
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/profile.php?id=61590706773849"
               target="_blank"
               rel="noreferrer"
               className="p-2 rounded-lg bg-[#0f1115] border border-white/8 text-white/50 hover:text-[#22d3ee] hover:border-[#22d3ee]/30 transition-all cursor-pointer"
@@ -96,12 +96,8 @@ export default function Footer() {
         </div>
 
         {/* Lower row */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 text-[10px] font-mono text-white/30">
-          <p>© {currentYear} Techgigs Zambo. All rights reserved locally.</p>
-          <div className="flex items-center gap-2">
-            <LayoutGrid className="h-3.5 w-3.5 text-[#22d3ee]" />
-            <span>Designed for Student Projects</span>
-          </div>
+        <div className="pt-8 text-center text-[10px] font-mono text-white/30">
+          <p>© {currentYear} Techgigs Zambo.</p>
         </div>
 
       </div>

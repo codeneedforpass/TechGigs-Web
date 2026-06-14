@@ -1,16 +1,28 @@
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { animate, stagger } from 'animejs';
-import { Code, Layout, Palette, Compass, Cpu, Zap } from 'lucide-react';
+import { Code, Layout, Palette, Compass, Cpu } from 'lucide-react';
 
 export default function Services() {
   const containerRef = useScrollReveal({
     animation: (target) => {
-      const items = target.querySelectorAll('.service-card');
-      if (items.length > 0) {
-        animate(items, {
+      const headers = target.querySelectorAll('.service-header');
+      const cards = target.querySelectorAll('.service-card');
+
+      if (headers.length > 0) {
+        animate(headers, {
+          opacity: [0, 1],
+          translateY: [24, 0],
+          delay: stagger(80),
+          duration: 700,
+          ease: 'outCubic',
+        });
+      }
+
+      if (cards.length > 0) {
+        animate(cards, {
           opacity: [0, 1],
           translateY: [35, 0],
-          delay: stagger(120),
+          delay: stagger(120, { start: 180 }),
           duration: 800,
           ease: 'outCubic',
         });
@@ -58,28 +70,31 @@ export default function Services() {
 
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-          <div className="service-card opacity-0 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#22d3ee]/10 border border-[#22d3ee]/20 text-[#22d3ee] text-[10px] font-bold tracking-[1.5px] uppercase font-mono">
-            <Zap className="h-3 w-3" />
-            <span>AFFORDABLE OUTCOMES</span>
-          </div>
-          <h2 className="service-card opacity-0 text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Our Services
-          </h2>
-          <div className="service-card opacity-0 w-12 h-1 bg-[#22d3ee]/80 mx-auto rounded-full" />
-          <p className="service-card opacity-0 text-sm text-white/50 leading-relaxed font-light">
-            We deliver highly creative, responsive, and functional solutions built specifically to scale within student-friendly budgets.
+        <div className="relative mx-auto mb-16 max-w-2xl">
+          <p className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none text-[clamp(4rem,14vw,10rem)] font-extrabold uppercase leading-none tracking-tighter text-white/[0.03]">
+            Services
           </p>
+
+          <div className="relative z-10 flex flex-col items-center gap-5 text-center">
+            <span className="service-header inline-flex items-center gap-2 rounded-full border border-[#22d3ee]/25 bg-[#22d3ee]/10 px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-[#22d3ee] opacity-0">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#22d3ee]" />
+              What we offer
+            </span>
+            <h2 className="service-header bg-gradient-to-r from-white via-[#67e8f9] to-[#22d3ee] bg-clip-text text-3xl font-extrabold tracking-tight text-transparent opacity-0 sm:text-4xl md:text-5xl">
+              Our Services
+            </h2>
+            <div className="service-header h-1 w-12 rounded-full bg-gradient-to-r from-[#22d3ee] to-[#a855f7]/80 opacity-0" />
+          </div>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+        <div className="flex flex-wrap justify-center gap-8">
           {services.map((srv, index) => {
             const IconComp = srv.icon;
             return (
               <div
                 key={index}
-                className="service-card opacity-0 p-8 rounded-2xl bg-[#0f1115] border border-white/8 hover:border-[#22d3ee]/20 hover:bg-[#0f1115]/80 transition-all duration-300 flex flex-col justify-between group"
+                className="service-card group flex w-full max-w-md flex-col justify-between rounded-2xl border border-white/8 bg-[#0f1115] p-8 opacity-0 transition-all duration-300 hover:border-[#22d3ee]/20 hover:bg-[#0f1115]/80 md:w-[calc(50%-1rem)] md:max-w-none lg:w-[calc(33.333%-1.34rem)]"
               >
                 <div>
                   {/* Decorative Icon Wrapper */}

@@ -35,3 +35,23 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(34, 211, 238, 0.4);
 }
+
+.projects-track {
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1.5rem;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.projects-track::-webkit-scrollbar {
+  display: none;
+}
+
+.projects-track.is-dragging {
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.projects-track.is-dragging a {
+  pointer-events: none;
+}

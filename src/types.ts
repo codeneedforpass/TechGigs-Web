@@ -5,26 +5,27 @@ export interface ServiceItem {
   iconName: string;
 }
 
-export interface ProjectDetails {
-  overview: string;
-  techStack: string[];
-  deliverables: string[];
-  timeline: string;
-  idealFor: string;
+export interface ProjectTech {
+  name: string;
+  icon: string;
+  position: { top: string; left: string };
 }
 
-export interface ProjectPlaceholder {
+export interface ShowcaseProject {
   id: string;
   title: string;
-  category: string;
   description: string;
-  label: string;
-  details: ProjectDetails;
+  url: string;
+  image: string;
+  accentFrom: string;
+  accentTo: string;
+  tech: ProjectTech[];
+  builderUrl?: string;
+  builderLabel?: string;
 }
 
 export interface ContactFormInput {
   name: string;
   email: string;
-  service: string;
   message: string;
 }
