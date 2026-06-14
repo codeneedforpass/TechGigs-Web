@@ -24,9 +24,9 @@ function clamp(value: number, min: number, max: number) {
 function applyWordStyles(word: HTMLElement, eased: number) {
   const isHighlight = word.dataset.highlight === 'true';
 
-  word.style.opacity = String(0.06 + eased * 0.94);
-  word.style.transform = `translateY(${(1 - eased) * 18}px)`;
-  word.style.filter = `blur(${(1 - eased) * 7}px)`;
+  word.style.opacity = String(0.08 + eased * 0.92);
+  word.style.transform = `translateY(${(1 - eased) * 12}px)`;
+  word.style.filter = `blur(${(1 - eased) * 4}px)`;
 
   if (isHighlight && eased > 0.55) {
     word.style.color = '#22d3ee';
@@ -37,6 +37,36 @@ function applyWordStyles(word: HTMLElement, eased: number) {
   }
 }
 
+function groupWordsIntoLines(section: HTMLElement): HTMLElement[][] {
+  const words = Array.from(section.querySelectorAll<HTMLElement>('[data-about-word]'));
+  if (words.length === 0) return [];
+
+  const lines: HTMLElement[][] = [];
+  let currentLine: HTMLElement[] = [];
+  let currentTop: number | null = null;
+  const tolerance = 6;
+
+  words.forEach((word) => {
+    const top = Math.round(word.getBoundingClientRect().top);
+
+    if (currentTop === null || Math.abs(top - currentTop) <= tolerance) {
+      currentLine.push(word);
+      if (currentTop === null) currentTop = top;
+      return;
+    }
+
+    lines.push(currentLine);
+    currentLine = [word];
+    currentTop = top;
+  });
+
+  if (currentLine.length > 0) {
+    lines.push(currentLine);
+  }
+
+  return lines;
+}
+
 function AnimatedWord({ word }: { word: string }) {
   const isHighlight = highlightWords.has(word);
 
@@ -45,7 +75,7 @@ function AnimatedWord({ word }: { word: string }) {
       data-about-word
       data-highlight={isHighlight ? 'true' : 'false'}
       className="about-word inline-block will-change-[opacity,transform,filter]"
-      style={{ opacity: 0.06, transform: 'translateY(18px)', filter: 'blur(7px)' }}
+      style={{ opacity: 0.08, transform: 'translateY(12px)', filter: 'blur(4px)' }}
     >
       {word}
       {'\u00A0'}
@@ -57,13 +87,15 @@ export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const linesRef = useRef<HTMLElement[][]>([]);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const paragraphBlocks = section.querySelectorAll<HTMLElement>('[data-about-paragraph]');
-    const blockCount = paragraphBlocks.length;
+    const regroupLines = () => {
+      linesRef.current = groupWordsIntoLines(section);
+    };
 
     const update = () => {
       const rect = section.getBoundingClientRect();
@@ -80,25 +112,47 @@ export default function About() {
         glowRef.current.style.transform = `translate(-50%, -50%) scale(${1 + progress * 0.35})`;
       }
 
-      paragraphBlocks.forEach((block, blockIndex) => {
-        const start = blockIndex / blockCount;
-        const end = (blockIndex + 1.15) / blockCount;
+      const lines = linesRef.current;
+      const lineCount = Math.max(lines.length, 1);
+      const segment = 1 / lineCount;
+
+      lines.forEach((lineWords, lineIndex) => {
+        const start = lineIndex * segment;
+        const end = start + segment * 1.15;
         const t = clamp((progress - start) / (end - start), 0, 1);
         const eased = 1 - (1 - t) ** 3;
 
-        block.querySelectorAll<HTMLElement>('[data-about-word]').forEach((word) => {
+        lineWords.forEach((word) => {
           applyWordStyles(word, eased);
         });
       });
     };
 
+    const onResize = () => {
+      regroupLines();
+      update();
+    };
+
+    regroupLines();
     update();
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(() => {
+        regroupLines();
+        update();
+      });
+    }
+
+    const resizeObserver = new ResizeObserver(onResize);
+    resizeObserver.observe(section);
+
     window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
+    window.addEventListener('resize', onResize);
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
+      window.removeEventListener('resize', onResize);
     };
   }, []);
 
@@ -145,11 +199,10 @@ export default function About() {
             </div>
           </div>
 
-          <div className="mx-auto space-y-10 md:space-y-12">
+          <div className="mx-auto space-y-6 md:space-y-8">
             {paragraphs.map((paragraph, paragraphIndex) => (
               <p
                 key={paragraphIndex}
-                data-about-paragraph
                 className="mx-auto max-w-4xl text-[clamp(1.55rem,3.8vw,3.1rem)] font-medium leading-[1.4] tracking-[-0.02em] text-white/90"
               >
                 {paragraph.split(' ').map((word, wordIndex) => (

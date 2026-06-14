@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { animate } from 'animejs';
 
 interface ScrollRevealOptions {
   animation: (target: HTMLElement) => void;
@@ -13,15 +12,20 @@ export function useScrollReveal({
   rootMargin = '0px',
 }: ScrollRevealOptions) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const animationRef = useRef(animation);
+  const hasRevealedRef = useRef(false);
+
+  animationRef.current = animation;
 
   useEffect(() => {
     const element = containerRef.current;
-    if (!element) return;
+    if (!element || hasRevealedRef.current) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          animation(element);
+        if (entry.isIntersecting && !hasRevealedRef.current) {
+          hasRevealedRef.current = true;
+          animationRef.current(element);
           observer.unobserve(element);
         }
       },
@@ -32,12 +36,11 @@ export function useScrollReveal({
     );
 
     observer.observe(element);
+
     return () => {
-      if (element) {
-        observer.unobserve(element);
-      }
+      observer.disconnect();
     };
-  }, [animation, threshold, rootMargin]);
+  }, [threshold, rootMargin]);
 
   return containerRef;
 }

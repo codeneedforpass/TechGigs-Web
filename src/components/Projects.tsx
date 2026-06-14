@@ -188,8 +188,12 @@ export default function Projects() {
   const updateScrollState = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
-    setCanScrollLeft(track.scrollLeft > 8);
-    setCanScrollRight(track.scrollLeft < track.scrollWidth - track.clientWidth - 8);
+
+    const nextCanScrollLeft = track.scrollLeft > 8;
+    const nextCanScrollRight = track.scrollLeft < track.scrollWidth - track.clientWidth - 8;
+
+    setCanScrollLeft((prev) => (prev === nextCanScrollLeft ? prev : nextCanScrollLeft));
+    setCanScrollRight((prev) => (prev === nextCanScrollRight ? prev : nextCanScrollRight));
   }, []);
 
   const scrollByAmount = (direction: 'left' | 'right') => {
