@@ -177,10 +177,13 @@ export default function Projects() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const isPointerDown = useRef(false);
   const isDragging = useRef(false);
   const didDrag = useRef(false);
   const dragStartX = useRef(0);
   const scrollStart = useRef(0);
+
+  const DRAG_THRESHOLD = 8;
 
   const updateScrollState = useCallback(() => {
     const track = trackRef.current;
@@ -213,30 +216,45 @@ export default function Projects() {
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     const track = trackRef.current;
     if (!track) return;
-    isDragging.current = true;
+    isPointerDown.current = true;
+    isDragging.current = false;
     didDrag.current = false;
     dragStartX.current = e.clientX;
     scrollStart.current = track.scrollLeft;
-    track.setPointerCapture(e.pointerId);
-    track.classList.add('is-dragging');
   };
 
   const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
-    if (!isDragging.current || !trackRef.current) return;
+    const track = trackRef.current;
+    if (!track || !isPointerDown.current) return;
+
     const delta = e.clientX - dragStartX.current;
-    if (Math.abs(delta) > 6) {
+
+    if (!isDragging.current && Math.abs(delta) > DRAG_THRESHOLD) {
+      isDragging.current = true;
       didDrag.current = true;
+      track.setPointerCapture(e.pointerId);
+      track.classList.add('is-dragging');
     }
-    trackRef.current.scrollLeft = scrollStart.current - delta;
+
+    if (isDragging.current) {
+      track.scrollLeft = scrollStart.current - delta;
+    }
   };
 
   const endDrag = (e: PointerEvent<HTMLDivElement>) => {
-    if (!trackRef.current) return;
-    isDragging.current = false;
-    trackRef.current.classList.remove('is-dragging');
-    if (trackRef.current.hasPointerCapture(e.pointerId)) {
-      trackRef.current.releasePointerCapture(e.pointerId);
+    const track = trackRef.current;
+    if (!track) return;
+
+    isPointerDown.current = false;
+
+    if (isDragging.current) {
+      if (track.hasPointerCapture(e.pointerId)) {
+        track.releasePointerCapture(e.pointerId);
+      }
+      track.classList.remove('is-dragging');
     }
+
+    isDragging.current = false;
     updateScrollState();
   };
 

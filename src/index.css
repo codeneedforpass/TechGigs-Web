@@ -50,8 +50,5 @@
 .projects-track.is-dragging {
   scroll-snap-type: none;
   user-select: none;
-}
-
-.projects-track.is-dragging a {
-  pointer-events: none;
+  cursor: grabbing;
 }
